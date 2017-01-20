@@ -1,1 +1,90 @@
-Hello World
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+</head>
+<body>
+    <div id="container" style="width: 75%;">
+        <canvas id="canvas"></canvas>
+    </div>
+
+    <script type="text/javascript">
+    	// Data from database
+    	var remzData = [
+    		{"0":"Leakage","C_TYPE":"Leakage","1":"7","DETAILS":"7"},
+    		{"0":"Noise","C_TYPE":"Noise","1":"2","DETAILS":"2"},
+    		{"0":"Pest Control","C_TYPE":"Pest Control","1":"2","DETAILS":"2"},
+    		{"0":"Flooding","C_TYPE":"Flooding","1":"2","DETAILS":"2"},
+    		{"0":"Air Pollution","C_TYPE":"Air Pollution","1":"1","DETAILS":"1"},
+    		{"0":"Waste Disposal","C_TYPE":"Waste Disposal","1":"1","DETAILS":"1"}
+    	];
+
+    	// These colors is until 5 labels only, add more if you have more labels
+		var chartColors = [
+			"255, 99, 132",
+			"54, 162, 235",
+			"255, 206, 86",
+			"75, 192, 192",
+			"153, 102, 255",
+			"255, 159, 64"
+		];
+
+		var dbData = {
+			labels: [],
+			data: [],
+			bgColor: [],
+			borderColor: []
+		};
+
+		window.onload = function() {
+
+			$.each(remzData, function(key, val) {
+				dbData.labels.push(val.C_TYPE);
+				dbData.data.push(val.DETAILS);
+				dbData.bgColor.push("rgba(" + chartColors[key] + ", 0.5)");
+				dbData.borderColor.push("rgba(" + chartColors[key] + ", 1)");
+			});
+
+			var chartData = {
+				labels: dbData.labels,
+				datasets: [
+					{
+						backgroundColor: dbData.bgColor,
+			            borderColor: dbData.borderColor,
+			            borderWidth: 1,
+			            data: dbData.data,
+					}
+				]
+			};
+
+            var ctx = document.getElementById("canvas").getContext("2d");
+            window.myBar = new Chart(ctx, {
+                type: 'bar',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Mga reklamo sa mga reklamador'
+                    },
+                    tooltips: {
+				        callbacks: {
+				           label: function(tooltipItem) {
+				                  return tooltipItem.yLabel;
+				           }
+				        }
+				    }
+                }
+            });
+		}
+    </script>
+</body>
+</html>
